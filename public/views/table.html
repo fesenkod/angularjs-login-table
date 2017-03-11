@@ -1,0 +1,35 @@
+<div class="container-edit">
+  <form name="addOrEditForm" novalidate>
+    <p ng-show="showHelp" ng-cloak>All fields are required!</p>
+    <input type="text" name="firstName" value="" placeholder="First Name" ng-model="firstName"
+      ng-class="{'has-error': !addOrEditForm.firstName.$pristine && !firstName.length}" required>
+    <input type="text" name="secondName" value="" placeholder="Second Name" ng-model="secondName"
+      ng-class="{'has-error': !addOrEditForm.secondName.$pristine && !secondName.length}" required>
+    <input type="text" name="position" value="" placeholder="Position" ng-model="position"
+      ng-class="{'has-error': !addOrEditForm.position.$pristine && !position.length}" required>
+    <button ng-click="save(firstName, secondName, position)" type="button" name="save">Save</button>
+    <button type="button" name="filter">Filter</button>
+  </form>
+</div>
+
+
+<div class="container-table">
+  <table>
+    <thead>
+      <th></th>
+      <th>First Name</th>
+      <th>Second Name</th>
+      <th>Position</th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="i in employList">
+        <td><input type="checkbox" name="" value=""></td>
+        <td>{{i.firstName}}</td>
+        <td>{{i.secondName}}</td>
+        <td>{{i.position}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button type="button" name="delete">Delete</button>
+</div>

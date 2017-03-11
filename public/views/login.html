@@ -1,0 +1,23 @@
+<div class="container-auth">
+      <h3>Sign in with your Account</h3>
+      <form name="signInForm" novalidate>
+        <div class="form-group" ng-class="{'has-error': !signInForm.userLogin.$pristine && !userLogin.length}">
+          <label for="userLogin">Login</label>
+          <div>
+              <input class="form-control" id="userLogin" type="text" name="userLogin" ng-model="userLogin" required>
+              <p class="help-block" ng-show="!signInForm.userLogin.$pristine && !userLogin.length" ng-cloak>Login is required!</p>
+          </div>
+        </div>
+        <div class="form-group" ng-class="{'has-error': !signInForm.userPassword.$pristine && !userPassword.length}">
+          <label for="userPassword">Password</label>
+          <div>
+              <input id="userPassword" type="password" name="userPassword" ng-model="userPassword" required>
+              <p class="help-block" ng-show="!signInForm.userPassword.$pristine && !userPassword.length" ng-cloak>Password is required!</p>
+          </div>
+        </div>
+        <p ng-show="isNotExist" ng-cloak>Login or password was not found. Try again!</p>
+        <button ng-click="sign(userLogin, userPassword)" name="button" ng-disabled="signInForm.$invalid" disabled="">
+          Submit
+        </button>
+      </form>
+  </div>
