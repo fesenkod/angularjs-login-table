@@ -73,7 +73,7 @@ html, body {
 
 .container-table {
   margin: auto;
-  width: 45%;
+  width: 60%;
 }
 
 .container-table table {
@@ -117,9 +117,9 @@ html, body {
 
 .container-edit {
   margin: auto;
-  width: 45%;
+  width: 60%;
   text-align: right;
-  margin-top: 5%;
+  margin-top: 2%;
 }
 
 .container-edit input {
@@ -141,7 +141,7 @@ html, body {
   color: #fff;
   cursor: pointer;
   float: right;
-  margin-bottom: 8%;
+  margin-bottom: 6%;
 }
 
 .container-edit button[name="save"]:hover {
@@ -169,6 +169,26 @@ html, body {
   background-color: #327cfc;
 }
 
+.container-edit button[name="clear_filter"] {
+  display: block;
+  width: 20%;
+  height: 30px;
+  font-size: 1.1em;
+  border-radius: 4px;
+  background-color: #f0ad4e;
+  border: 1px solid #eea236;
+  color: #fff;
+  cursor: pointer;
+  float: right;
+  margin-bottom: 3%;
+  margin-right: 3%;
+}
+
+.container-edit button[name="clear_filter"]:hover {
+  color: #f1f1f1;
+  background-color: #ff6f0f;
+}
+
 .container-edit p {
   color: #ff1e1e;
 }
@@ -176,4 +196,68 @@ html, body {
 .container-edit .has-error {
   background-color: #ffd4cc;
   border: 2px solid #ff1e1e;
+}
+
+.container-table th {
+  cursor: pointer;
+}
+
+
+@media screen and (max-width: 1120px) and (min-width: 900px) {
+  .container-auth {
+    width: 30%;
+  }
+
+  .container-edit, .container-table {
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 900px) and (min-width: 700px) {
+  .container-auth {
+    width: 40%;
+  }
+
+  .container-edit, .container-table {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 700px) and (min-width: 500px) {
+  .container-auth {
+    width: 50%;
+  }
+
+  .container-edit, .container-table {
+    width: 95%;
+  }
+
+  .container-edit input {
+    width: 29%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .container-auth {
+    width: 90%;
+  }
+
+  .container-edit, .container-table {
+    width: 95%;
+  }
+
+  .container-edit input {
+    float: left;
+    width: 60%;
+    clear: left;
+    margin-bottom: 5%;
+  }
+
+  .container-edit button[name="save"], .container-edit button[name="filter"] {
+    float: left;
+    clear: left;
+    width: 60%;
+    margin-left: 2%;
+    margin-bottom: 5%;
+  }
 }

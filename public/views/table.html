@@ -7,8 +7,9 @@
       ng-class="{'has-error': !addOrEditForm.secondName.$pristine && !secondName.length}" required>
     <input type="text" name="position" value="" placeholder="Position" ng-model="position"
       ng-class="{'has-error': !addOrEditForm.position.$pristine && !position.length}" required>
-    <button ng-click="save(firstName, secondName, position)" type="button" name="save">Save</button>
-    <button type="button" name="filter">Filter</button>
+    <button ng-click="saveOrEdit(firstName, secondName, position)" type="button" name="save">Save</button>
+    <button ng-click="applyFilter(firstName, secondName, position)" type="button" name="filter">Filter</button>
+    <button ng-click="clearFilter()" ng-show="isFilterSet" type="button" name="clear_filter">Clear Filter</button>
   </form>
 </div>
 
@@ -17,13 +18,25 @@
   <table>
     <thead>
       <th></th>
-      <th>First Name</th>
-      <th>Second Name</th>
-      <th>Position</th>
+      <th ng-click="sortType = 'firstName'; setReverse()">
+        First Name
+        <span ng-show="sortType == 'firstName' && !sortReverse" class="fa fa-caret-down"></span>
+        <span ng-show="sortType == 'firstName' && sortReverse" class="fa fa-caret-up"></span>
+      </th>
+      <th ng-click="sortType = 'secondName'; setReverse()">
+        Second Name
+        <span ng-show="sortType == 'secondName' && !sortReverse" class="fa fa-caret-down"></span>
+        <span ng-show="sortType == 'secondName' && sortReverse" class="fa fa-caret-up"></span>
+      </th>
+      <th ng-click="sortType = 'position'; setReverse()">
+        Position
+        <span ng-show="sortType == 'position' && !sortReverse" class="fa fa-caret-down"></span>
+        <span ng-show="sortType == 'position' && sortReverse" class="fa fa-caret-up"></span>
+      </th>
     </thead>
     <tbody>
-      <tr ng-repeat="i in employList">
-        <td><input type="checkbox" name="" value=""></td>
+      <tr ng-repeat="i in employList | orderBy:sortType:sortReverse | filter:search">
+        <td><input type="checkbox" name="" value="" ng-click="isChecked(i.id)"></td>
         <td>{{i.firstName}}</td>
         <td>{{i.secondName}}</td>
         <td>{{i.position}}</td>
@@ -31,5 +44,5 @@
     </tbody>
   </table>
 
-  <button type="button" name="delete">Delete</button>
+  <button ng-click="delete()" type="button" name="delete">Delete</button>
 </div>
