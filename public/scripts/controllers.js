@@ -35,11 +35,12 @@ employeesRegisterApp.controller("tableCtrl", function ($scope, $http) {
   $scope.employList = [];
   $scope.selectedCheckboxes = [];
   $scope.showHelp = false;
-  $scope.id;
   $scope.sortType = '';
   $scope.sortReverse = '';
   $scope.search = {};
   $scope.isFilterSet = false;
+  $scope.busyLoadingData = false;
+  $scope.countSimpleQuery = 0;
 
   $scope.setReverse = function () {
     if ($scope.sortReverse === '') {
@@ -68,17 +69,73 @@ employeesRegisterApp.controller("tableCtrl", function ($scope, $http) {
     $scope.isFilterSet = false;
   };
 
-  $http.get("/Employees?q=n&_start=7&_limit=20").then(function(response) {
+  $scope.getId = function() {
+    $scope.id = $scope.employList.length > 0 ? $scope.employList[$scope.employList.length-1]['id'] : 0;
+  };
+
+  $scope.getTable = function (isButtonClickedFirst) {
+    if ($scope.busyLoadingData) return;
+    $scope.busyLoadingData = true;
+    if ($scope.isFilterSet) {
+      if (isButtonClickedFirst) {
+        $scope.employList = [];
+      };
+      $scope.getId();
+      var query = $scope.buildFilterQuery($scope.search['firstName'], $scope.search['secondName'], $scope.search['position']);
+      $http.get(query).then(function(response) {
+        for (var i = 0; i < response.data.length; i++) {
+          $scope.employList.push(response.data[i]);
+          };
+        console.log($scope.employList);
+        $scope.busyLoadingData = false;
+        });
+    }
+    else {
+      if (isButtonClickedFirst) {
+        $scope.employList = [];
+      };
+      $scope.getId();
+      if ($scope.countSimpleQuery != 0) {
+        $scope.id++;
+      };
+      $http.get("/Employees?_start=" + ($scope.id) + "&_limit=20").then(function(response) {
+        for (var i = 0; i < response.data.length; i++) {
+          $scope.employList.push(response.data[i]);
+          };
+        $scope.busyLoadingData = false;
+        $scope.countSimpleQuery++;
+        console.log($scope.employList);
+        });
+    };
+  };
+
+  $scope.getTable(0);
+
+
+/*
+  $http.get("/Employees?_start=15&_limit=20").then(function(response) {
     for (var i = 0; i < response.data.length; i++) {
       $scope.employList.push(response.data[i]);
       };
     console.log($scope.employList);
     });
+*/
 
-  $scope.getId = function() {
-    // TODO: change function to communicate with server rather than operates on client's employees array
-    $scope.id = $scope.employList.length > 0 ? $scope.employList[$scope.employList.length-1]['id'] : 0;
+  $scope.buildFilterQuery = function (name, surname, position) {
+    var query = "/Employees?";
+    if (name) {
+      query += "firstName_like=" + name + "&";
+    };
+    if (surname) {
+      query += "secondName_like=" + surname + "&";
+    };
+    if (position) {
+      query += "position_like=" + position + "&";
+    };
+    query += "id_gte=" + ($scope.id+1) + "&_limit=20";
+    return query;
   };
+
 
   $scope.clearForm = function () {
     $scope.addOrEditForm.$setPristine();
@@ -114,9 +171,7 @@ employeesRegisterApp.controller("tableCtrl", function ($scope, $http) {
       return;
     };
     // for supporting adding new employees
-    $scope.getId();
     var newObj = {
-      "id": $scope.id + 1,
       "firstName": name,
       "secondName": surname,
       "position": position

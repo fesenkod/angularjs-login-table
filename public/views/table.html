@@ -8,13 +8,13 @@
     <input type="text" name="position" value="" placeholder="Position" ng-model="position"
       ng-class="{'has-error': !addOrEditForm.position.$pristine && !position.length}" required>
     <button ng-click="saveOrEdit(firstName, secondName, position)" type="button" name="save">Save</button>
-    <button ng-click="applyFilter(firstName, secondName, position)" type="button" name="filter">Filter</button>
-    <button ng-click="clearFilter()" ng-show="isFilterSet" type="button" name="clear_filter">Clear Filter</button>
+    <button ng-click="applyFilter(firstName, secondName, position); getTable(true)" type="button" name="filter">Filter</button>
+    <button ng-click="clearFilter(); getTable(true)" ng-show="isFilterSet" type="button" name="clear_filter">Clear Filter</button>
   </form>
 </div>
 
 
-<div class="container-table">
+<div class="container-table" infinite-scroll="getTable()" infinite-scroll-disabled='busyLoadingData' >
   <table>
     <thead>
       <th></th>
@@ -35,7 +35,7 @@
       </th>
     </thead>
     <tbody>
-      <tr ng-repeat="i in employList | orderBy:sortType:sortReverse | filter:search">
+      <tr ng-repeat="i in employList | orderBy:sortType:sortReverse">
         <td><input type="checkbox" name="" value="" ng-click="isChecked(i.id)"></td>
         <td>{{i.firstName}}</td>
         <td>{{i.secondName}}</td>
@@ -45,4 +45,8 @@
   </table>
 
   <button ng-click="delete()" type="button" name="delete">Delete</button>
+  <br><br><br><br><br>
+
+
+
 </div>

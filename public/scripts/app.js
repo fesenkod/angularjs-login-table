@@ -1,4 +1,4 @@
-var employeesRegisterApp = angular.module("employeesRegisterApp", ["ngRoute"]);
+var employeesRegisterApp = angular.module("employeesRegisterApp", ["ngRoute", "infinite-scroll"]);
 
 employeesRegisterApp.config(function($routeProvider, $locationProvider) {
   $locationProvider.hashPrefix('');
