@@ -60,7 +60,7 @@ employeesRegisterApp.controller("tableCtrl", function ($scope, $http) {
     }
     else {
       $scope.isFilterSet = false;
-    };  
+    };
   };
 
   $scope.clearFilter = function () {
@@ -68,7 +68,7 @@ employeesRegisterApp.controller("tableCtrl", function ($scope, $http) {
     $scope.isFilterSet = false;
   };
 
-  $http.get("/Employees").then(function(response) {
+  $http.get("/Employees?q=n&_start=7&_limit=20").then(function(response) {
     for (var i = 0; i < response.data.length; i++) {
       $scope.employList.push(response.data[i]);
       };
