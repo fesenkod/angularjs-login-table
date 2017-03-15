@@ -21,7 +21,11 @@ For start this application:
 Application uses ng-infinite-scroll to download data from server by chuncks. Scroll at the bottom of the page to display more data in table.
 
 To filter data you should enter some text in inputs at the top of the page and click Filter button.
+
 To edit data you should select ONE raw from the table, then information will be displayed at input fields and you can edit and Save it.
+
 To delete data you should select all raws you want to delete and press Delete button at the bottom of the page.
+
 To add new data you should enter it in empty input fields while there is not 1 (ONE) raw selected in the table.
+
 To sort table by any of 3 fields you should press on desired field at the heading of the table. Next clicks will change order of sorting.
