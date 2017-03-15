@@ -24,7 +24,8 @@ employeesRegisterApp.controller("loginCtrl", function ($scope, $http) {
 });
 
 
-employeesRegisterApp.controller("tableCtrl", function ($scope, $http) {
+employeesRegisterApp.controller("tableCtrl", ['tableFactory', '$http', '$scope', function (tableFactory, $http, $scope ) {
+  // check if user is authorized
   var initTest = function () {
     if (localStorage.getItem('currentUser') == "") {
       location.href = "#login";
@@ -32,16 +33,29 @@ employeesRegisterApp.controller("tableCtrl", function ($scope, $http) {
   };
   initTest();
 
-  $scope.employList = [];
+  // inject service object into controller
+  $scope.tableFactory = tableFactory;
+
+  //initial download of information from database
+  $scope.tableFactory.getTable();
+
+  // watcher for changing in service object
+  $scope.$watch(watchSource, function(current, previous){
+      $scope.tableFactory = current;
+    });
+
+  function watchSource(){
+      return tableFactory;
+    };
+
+
+  // necessary for form validation, sorting and editing variables
   $scope.selectedCheckboxes = [];
   $scope.showHelp = false;
   $scope.sortType = '';
   $scope.sortReverse = '';
-  $scope.search = {};
-  $scope.isFilterSet = false;
-  $scope.busyLoadingData = false;
-  $scope.countSimpleQuery = 0;
 
+  // function for sorting in reverse order
   $scope.setReverse = function () {
     if ($scope.sortReverse === '') {
       $scope.sortReverse = false;
@@ -51,91 +65,26 @@ employeesRegisterApp.controller("tableCtrl", function ($scope, $http) {
     };
   };
 
+
   $scope.applyFilter = function(name, surname, position) {
+    $scope.selectedCheckboxes = [];
     $scope.addOrEditForm.$setPristine();
-    $scope.search['firstName'] = name;
-    $scope.search['secondName'] = surname;
-    $scope.search['position'] = position;
-    if ($scope.search['firstName'] || $scope.search['secondName'] || $scope.search['position']) {
-      $scope.isFilterSet = true;
+    tableFactory.search['firstName'] = name;
+    tableFactory.search['secondName'] = surname;
+    tableFactory.search['position'] = position;
+    if (tableFactory.search['firstName'] || tableFactory.search['secondName'] || tableFactory.search['position']) {
+      tableFactory.isFilterSet = true;
     }
     else {
-      $scope.isFilterSet = false;
+      tableFactory.isFilterSet = false;
     };
   };
 
   $scope.clearFilter = function () {
-    $scope.search = {};
-    $scope.isFilterSet = false;
+    tableFactory.search = {};
+    tableFactory.isFilterSet = false;
+    tableFactory.countSimpleQuery = 0;
   };
-
-  $scope.getId = function() {
-    $scope.id = $scope.employList.length > 0 ? $scope.employList[$scope.employList.length-1]['id'] : 0;
-  };
-
-  $scope.getTable = function (isButtonClickedFirst) {
-    if ($scope.busyLoadingData) return;
-    $scope.busyLoadingData = true;
-    if ($scope.isFilterSet) {
-      if (isButtonClickedFirst) {
-        $scope.employList = [];
-      };
-      $scope.getId();
-      var query = $scope.buildFilterQuery($scope.search['firstName'], $scope.search['secondName'], $scope.search['position']);
-      $http.get(query).then(function(response) {
-        for (var i = 0; i < response.data.length; i++) {
-          $scope.employList.push(response.data[i]);
-          };
-        console.log($scope.employList);
-        $scope.busyLoadingData = false;
-        });
-    }
-    else {
-      if (isButtonClickedFirst) {
-        $scope.employList = [];
-      };
-      $scope.getId();
-      if ($scope.countSimpleQuery != 0) {
-        $scope.id++;
-      };
-      $http.get("/Employees?_start=" + ($scope.id) + "&_limit=20").then(function(response) {
-        for (var i = 0; i < response.data.length; i++) {
-          $scope.employList.push(response.data[i]);
-          };
-        $scope.busyLoadingData = false;
-        $scope.countSimpleQuery++;
-        console.log($scope.employList);
-        });
-    };
-  };
-
-  $scope.getTable(0);
-
-
-/*
-  $http.get("/Employees?_start=15&_limit=20").then(function(response) {
-    for (var i = 0; i < response.data.length; i++) {
-      $scope.employList.push(response.data[i]);
-      };
-    console.log($scope.employList);
-    });
-*/
-
-  $scope.buildFilterQuery = function (name, surname, position) {
-    var query = "/Employees?";
-    if (name) {
-      query += "firstName_like=" + name + "&";
-    };
-    if (surname) {
-      query += "secondName_like=" + surname + "&";
-    };
-    if (position) {
-      query += "position_like=" + position + "&";
-    };
-    query += "id_gte=" + ($scope.id+1) + "&_limit=20";
-    return query;
-  };
-
 
   $scope.clearForm = function () {
     $scope.addOrEditForm.$setPristine();
@@ -144,6 +93,7 @@ employeesRegisterApp.controller("tableCtrl", function ($scope, $http) {
     $scope.position = "";
   }
 
+  // function for adding new or editing existing elements of the table and database
   $scope.saveOrEdit = function (name, surname, position) {
     $scope.showHelp = false;
     if (!name || !surname || !position) {
@@ -159,10 +109,9 @@ employeesRegisterApp.controller("tableCtrl", function ($scope, $http) {
         "position": position
       };
       $http.put("/Employees/" + $scope.selectedCheckboxes[0], newObj).then(function (response) {
-        for (var i = 0; i < $scope.employList.length; i++) {
-          if ($scope.employList[i].id == response.data.id) {
-            $scope.employList.splice(i, 1, response.data);
-            console.log(response.data);
+        for (var i = 0; i < tableFactory.employList.length; i++) {
+          if (tableFactory.employList[i].id == response.data.id) {
+            tableFactory.employList.splice(i, 1, response.data);
           };
         };
       });
@@ -177,12 +126,12 @@ employeesRegisterApp.controller("tableCtrl", function ($scope, $http) {
       "position": position
     };
     $http.post("/Employees", newObj).then(function (response) {
-      $scope.employList.push(response.data);
+      tableFactory.employList.push(response.data);
     });
     $scope.clearForm();
   };
 
-
+  // function for checking which eleents select user for editing
   $scope.isChecked = function (empl_id) {
     var index = $scope.selectedCheckboxes.indexOf(empl_id);
     if (index == -1) {
@@ -191,13 +140,13 @@ employeesRegisterApp.controller("tableCtrl", function ($scope, $http) {
     else {
           $scope.selectedCheckboxes.splice(index, 1);
     };
-    console.log($scope.selectedCheckboxes);
+    // if user select ONLY 1 element - enter it to inputs field for edit
     if ($scope.selectedCheckboxes.length == 1) {
-      for (var i = 0; i < $scope.employList.length; i++) {
-        if ($scope.employList[i].id == $scope.selectedCheckboxes[0]) {
-          $scope.firstName = $scope.employList[i].firstName;
-          $scope.secondName = $scope.employList[i].secondName;
-          $scope.position = $scope.employList[i].position;
+      for (var i = 0; i < tableFactory.employList.length; i++) {
+        if (tableFactory.employList[i].id == $scope.selectedCheckboxes[0]) {
+          $scope.firstName = tableFactory.employList[i].firstName;
+          $scope.secondName = tableFactory.employList[i].secondName;
+          $scope.position = tableFactory.employList[i].position;
           break;
         };
       };
@@ -209,12 +158,12 @@ employeesRegisterApp.controller("tableCtrl", function ($scope, $http) {
     };
   };
 
-
+  // function for deleting selected elements
   $scope.delete = function () {
     for (var i = 0; i < $scope.selectedCheckboxes.length; i++) {
-      for (var j = 0; j < $scope.employList.length; j++) {
-        if ($scope.employList[j].id == $scope.selectedCheckboxes[i]) {
-          $scope.employList.splice(j, 1);
+      for (var j = 0; j < tableFactory.employList.length; j++) {
+        if (tableFactory.employList[j].id == $scope.selectedCheckboxes[i]) {
+          tableFactory.employList.splice(j, 1);
           $http.delete("/Employees/" + $scope.selectedCheckboxes[i]).then(function (response) {});
           break;
         };
@@ -225,9 +174,5 @@ employeesRegisterApp.controller("tableCtrl", function ($scope, $http) {
     $scope.clearForm();
   };
 
-  // TODO: filter function should delete some values from the selectedCheckboxes array
 
-
-
-
-});
+}]);
