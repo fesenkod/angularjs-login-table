@@ -1,0 +1,25 @@
+{
+  "name": "login_table_display_spa",
+  "version": "1.0.0",
+  "description": "SPA for displaying information about employees from the database in table view. Supports user authorization, adding, editing, deleting, sorting and filtering of data.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fesenkod/angularjs-login-table.git"
+  },
+  "keywords": [
+    "angularJS",
+    "tableView",
+    "database",
+    "authorization"
+  ],
+  "author": "Dmytro Fesenko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fesenkod/angularjs-login-table/issues"
+  },
+  "homepage": "https://github.com/fesenkod/angularjs-login-table#readme"
+}
