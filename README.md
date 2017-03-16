@@ -4,7 +4,7 @@ SPA for displaying database with employees in a table view. Supports add new dat
 
 This spplication uses mock json-server (https://github.com/typicode/json-server).
 
-For start this application:
+To start this application:
 
 1) Open console window on your computer.
 
