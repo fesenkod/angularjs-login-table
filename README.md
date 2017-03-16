@@ -1,6 +1,6 @@
 # angularjs-login-table
 
-SPA for displaying database with employees in a table view. Supports add new data to database, edit existing data, deletion, sorting and filtering by several fields. Requires authorization before access to table view. It use SHA256 hashing for passwords (https://github.com/emn178/js-sha256). If you want to log in in testing mode you should look at file readme.txt where example 10 users are described with actual logins and passwords. 
+SPA for displaying database with employees in a table view. Supports add new data to database, edit existing data, deletion, sorting and filtering by several fields. Requires authorization before access to table view. It uses SHA256 hashing for passwords (https://github.com/emn178/js-sha256). If you want to log in in testing mode you should look at file readme.txt where example 10 users are described with actual logins and passwords. 
 
 This spplication uses mock json-server (https://github.com/typicode/json-server).
 
