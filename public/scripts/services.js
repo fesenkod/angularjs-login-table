@@ -43,7 +43,7 @@ angular.module('employeesRegisterApp').factory('tableFactory', ['$http', functio
         tableFact.employList = [];
       };
       tableFact.getId();
-      if (tableFact.countSimpleQuery != 0) {
+      if (tableFact.countSimpleQuery != 0 && (tableFact.search['firstName'] || tableFact.search['secondName'] || tableFact.search['position'])) {
         tableFact.id++;
       };
       $http.get("/Employees?_start=" + (tableFact.id) + "&_limit=20").then(function(response) {
