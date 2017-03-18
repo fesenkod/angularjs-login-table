@@ -16,3 +16,14 @@ employeesRegisterApp.config(function($routeProvider, $locationProvider) {
     controller : "loginCtrl"
   });
 });
+
+  // check if user is authorized
+employeesRegisterApp.run(['$rootScope', '$location', function ($rootScope, $location) {
+    $rootScope.$on('$routeChangeStart', function (event) {
+        if ($location.path() == "/table" && !localStorage.getItem('currentUser')) {
+            console.log('ACCESS DENIED. YOU SHOULD LOG IN!');
+            event.preventDefault();
+            $location.path('/');
+        };
+    });
+}]);

@@ -1,10 +1,6 @@
 employeesRegisterApp.controller("loginCtrl", function ($scope, $http) {
 
-  $scope.signOut = function () {
-    localStorage.setItem('currentUser', "");
-  };
-
-  $scope.signOut();
+  localStorage.clear();
 
   $scope.isNotExist = false;
 
@@ -25,13 +21,6 @@ employeesRegisterApp.controller("loginCtrl", function ($scope, $http) {
 
 
 employeesRegisterApp.controller("tableCtrl", ['tableFactory', '$http', '$scope', function (tableFactory, $http, $scope ) {
-  // check if user is authorized
-  var initTest = function () {
-    if (localStorage.getItem('currentUser') == "") {
-      location.href = "#login";
-    };
-  };
-  initTest();
 
   // inject service object into controller
   $scope.tableFactory = tableFactory;
@@ -64,7 +53,6 @@ employeesRegisterApp.controller("tableCtrl", ['tableFactory', '$http', '$scope',
       $scope.sortReverse = !$scope.sortReverse;
     };
   };
-
 
   $scope.applyFilter = function(name, surname, position) {
     $scope.selectedCheckboxes = [];
